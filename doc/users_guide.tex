@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+%GENERAL
+\usepackage[a4paper, inner=3cm, outer=2cm, top=2cm, bottom=2cm]{geometry}
+
+%Caption
+\usepackage{caption}
+\usepackage[dvipsnames]{xcolor}
+\DeclareCaptionFont{black}{\color{black}}
+
+%CODE
+\captionsetup[lstlisting]{labelfont=black,textfont=black}
+\usepackage{listings}     
+\usepackage{lstautogobble}  % Fix relative indenting
+\usepackage{zi4}            % Nice font
+
+\definecolor{keywords}{rgb}{1., 0.43, 0.84}
+\definecolor{comments}{rgb}{0.6, 0.44, 0.80}
+\definecolor{strings}{rgb}{1., 1., 0.25}
+\definecolor{numbers}{rgb}{0.6, 0.48, 0.78}
+\definecolor{background}{rgb}{0.20, 0.20, 0.20}
+\definecolor{foreground}{rgb}{1., 1., 1.}
+\definecolor{types}{rgb}{0.33, 0.71, 0.95}
+
+\usepackage{listings}
+\lstset{
+    language=python,
+    autogobble,
+    columns=fullflexible,
+    showspaces=false,
+    showtabs=false,
+    breaklines=true,
+    showstringspaces=false,
+    breakatwhitespace=true,
+    escapeinside={(*@}{@*)},
+    emph={int, int32_t, float, double, unsigned, void, bool, char},
+    emphstyle={\color{types}},
+    backgroundcolor=\color{background},
+    commentstyle=\color{comments},
+    keywordstyle=\color{keywords},
+    stringstyle=\color{strings},
+    numberstyle=\color{numbers},
+    basicstyle=\linespread{1.1}\ttfamily\color{foreground},
+    frame=lbtr,
+    framesep=0.1cm,
+    xleftmargin=0.0cm,
+    tabsize=4,
+    captionpos=b
+}
+\renewcommand{\lstlistingname}{Code}
+\newcommand{\codet}[1]{\textcolor{black!80}{\texttt{#1}}}
+
+
+\title{Graphical User Interface for making configuration files for CAEN WaveDump software}
+\author{LRDPRDX}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%BEGIN%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+\input{./intro.tex}
+\input{./install.tex}
+\input{./usage.tex}
+
+\end{document}

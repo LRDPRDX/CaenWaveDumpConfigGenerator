@@ -1,0 +1,207 @@
+#!/usr/bin/env python3
+
+#external imports:
+try:
+    import tkinter as tk
+    import tkinter.filedialog as tkFileDialog
+except:
+    import Tkinter as tk
+    import tkFileDialog
+
+
+#internal imports:
+from Frames import *
+from Dialogs import *
+from Pages import (StartPage, CommonSettingsPage, IndividSettingsPage, TerminalPage) 
+from SStyle import *
+from Configuration import Configuration
+
+
+
+class Application( tk.Tk ) :
+    """
+        Root element
+    """
+    def __init__( self ) :
+        tk.Tk.__init__( self )
+        self.title( "Creator of configuration file")
+        self.resizable( False, False )
+
+        self.InitFields()
+        self.InitStyle()
+        self.InitContainer()
+        self.CreatePages()
+
+        self.ShowPage( "Start" )
+
+
+    def InitFields( self ):
+        self.conf = Configuration( 2 )# 2 --- number of channels on a device
+        self.pages = dict()
+        self.style = SStyle()
+
+
+    def InitContainer( self ) :
+        """
+            The 'container' frame contains all frames
+            throug the frames that are pages
+        """
+        self.container = tk.Frame( self )
+        self.container.pack( side="top", fill="both", expand=True )
+        self.container.grid_rowconfigure( 0, weight=1 )
+        self.container.grid_columnconfigure( 0, weight=1 )
+
+
+    def CreatePages( self ) :
+        print( "Creating pages..." )
+
+        self.startPage = StartPage( self.container, self, self.style, "CREATION OF CONFIGURATION FILE" )
+        self.AddPage( self.startPage, "Start" )
+        
+        self.commonPage = CommonSettingsPage( self.container, self, self.style, "Common settings" )
+        self.AddPage( self.commonPage, "Common" )
+
+        self.individualPage = IndividSettingsPage( self.container, self, self.style, "Channel settings" )
+        self.AddPage( self.individualPage, "Individual" )
+
+        self.terminalPage = TerminalPage( self.container, self, self.style, "Terminal" )
+        self.AddPage( self.terminalPage, "Terminal" )
+
+
+
+    def InitStyle( self ) :
+        self.style.theme = self.style.darkTheme
+
+        tk.Tk.style = ttk.Style()
+        tk.Tk.style.theme_create( "darky", parent="clam",
+            settings={
+                "TNotebook" : {
+                                "configure" : {
+                                                "background" : self.style.theme["bg"]
+                                              }
+                              },
+                "TNotebook.Tab" : {
+                                    "configure" : {
+                                                    "font" : self.style.widgetFont.__str__(),
+                                                    "foreground" : self.style.theme["fg"],
+                                                    "background" : self.style.theme["bg"],
+                                                    "width" : "10"
+                                                   },
+                                    "map" : {
+                                                "background" : [
+                                                                    ("selected", self.style.theme["ab"]),
+                                                                    ("active", self.style.theme["ab"])
+                                                               ],
+                                                "foreground" : [
+                                                                    ("selected", self.style.theme["black"])
+                                                               ]
+                                            }
+                                  },
+                     }#settings
+        )#theme_create
+        tk.Tk.style.theme_use( "darky" )
+
+
+    def DefinePath( self ) :
+        path = tkFileDialog.askdirectory()
+        self.conf.pathToFile.set( path )
+
+
+    def AddPage( self, page, pageName ) :
+        if( pageName in self.pages.keys() ) :
+            raise SystemExit( "There was an attempt to duplicate page" )
+        else :
+            page.grid( row=0, column=0, sticky="nsew" )
+            self.pages[ pageName ] = page;
+
+
+    def ShowPage( self, pageName ) :
+        """Shows a frame with a given page name"""
+        try:
+            self.pages[ pageName ].tkraise();
+        except( KeyError ) :
+            print( "There is no requested page '{}' \n".format( pageName ) )
+
+
+    def Save( self ) :
+        """
+            Creates (or REcreates) configuration file
+            and fill it according to porvided settings
+        """
+        print( "Creating configuration file...wait" )
+
+        try :
+            #Configuration string 
+            configuration = ""
+
+            #Write common settings
+            configuration += "[COMMON]\n"
+
+            #Connnection string
+            configuration += ( "OPEN " + self.conf.connection.linkType.get() )
+            configuration += ( " " + str(self.conf.connection.linkNumber.get()) )
+            if( self.conf.connection.linkType.get() == "PCI" ) :
+                configuration += ( " " + str(self.conf.connection.nodeNumber.get()) )
+            configuration += ( " " + str(self.conf.connection.baseAddress.get()) )
+            configuration += ( "\n\n" )
+
+            #Number of spaces from the beginning of the line and parameter
+            #value in configuration file
+            offset=30
+            #Settings
+            for key, value in self.conf.common.pd.items() :
+                configuration += ( key + " "*(offset - len(key)) + str(value.get()) + "\n" )
+
+            #Path to gnuplot
+            configuration += ( "GNUPLOT_PATH" + " "*(offset - len("GNUPLOT_PATH")) + "\"" + self.conf.gnuPath.get() + "\"\n" )
+
+            #Write individual settings
+            for i, ch in enumerate(self.conf.channel) :
+                configuration += ( '\n[' + str(i) + "]\n" )
+                if( str(ch.pd["ENABLE_INPUT"].get()) == "YES") :
+                    for key, value in ch.pd.items() :
+                        #use baseline shift iff dc offset is NOT used
+                        #and vice versa
+                        if( key == "BASELINE_SHIFT" ) :
+                            if( ch.useOffset.get() ) : continue
+                        elif( key == "DC_OFFSET" ) :
+                            if( not ch.useOffset.get() ) : continue
+                        configuration += ( key + " "*(offset - len(key)) + str(value.get()) + "\n" )
+                else :
+                    configuration += ( "ENABLE_INPUT" + " "*(offset - len("ENABLE_INPUT")) + "NO\n" )
+
+            #This part is required even though there are no such channels on a device.
+            #Without this part WaveDump will complain to you
+            for i in range( self.conf.channel.__len__(), self.conf.maxNumChannels ) :
+                configuration += ( '\n[' + str(i) + "]\n" )
+                configuration += ( "ENABLE_INPUT" + " "*(offset - len("ENABLE_INPUT")) + "NO\n" )
+
+            #Create (rectreate) configuration file
+            f = open( self.conf.pathToFile.get() + "/config.txt", "w+" )
+            f.write( configuration )
+            f.close()
+
+            print( "Creating configuration file...done" )
+            SInfoDialog( self, self.style, infoText="Config-file successfully created" )
+
+        except( IOError ) :
+            print( "Creating configuration file...error" )
+            SErrorDialog( self, self.style, errorText="opening/writing/closing file",
+                                        auxText="Check path, permissions, etc." )
+
+        except( ValueError ) :
+            print( "Creating configuration file...error" )
+            SErrorDialog( self, self.style, errorText="creating configuration string",
+                                        auxText="Probably some field has an invalid value")
+
+
+    def Exit( self ) :
+        print( "Exiting GUI..." )
+        self.terminalPage.terminalProcess.terminate()
+        quit()
+
+
+
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
