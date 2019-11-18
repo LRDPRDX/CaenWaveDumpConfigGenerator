@@ -1,3 +1,8 @@
 /src/*.pyc
 /src/__pycache__
 /srs/config.txt
+
+/doc/users_guide.toc
+/doc/users_guide.aux
+/doc/users_guide.out
+/doc/users_guide.log
