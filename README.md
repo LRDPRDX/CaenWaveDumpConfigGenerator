@@ -35,7 +35,7 @@ $ caenccf
 You should see the starting page:
 
 <p float="center">
-  <img src="/pictures/documentation/gui/start_page.png" height="500">
+  <img src="pictures/documentation/gui/start_page.png" height="500">
 </p>
 
 ## Usage
