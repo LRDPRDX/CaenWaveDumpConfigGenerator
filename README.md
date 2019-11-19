@@ -33,8 +33,9 @@ Now log out and login back and run:
 $ caenccf
 ```
 You should see the starting page:
+
 <p float="center">
-  <img src="/pictures/documentation/gui/start_page.png" height="250">
+  <img src="/pictures/documentation/gui/start_page.png" height="500">
 </p>
 
 ## Usage
@@ -44,7 +45,7 @@ For the usage see the documentation (Sec. **Usage**).
 The documentation is available [here](/doc/users_guide.pdf).
 
 ## Feedback
-Report bugs and/or suggestions to paradox1859@gmail.com
+Report bugs and/or suggest to paradox1859@gmail.com
 
 ## TODO's
 - [ ] Add board identifier (for the proper time scale)
