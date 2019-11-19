@@ -39,3 +39,6 @@ The documentation is available [here](/doc/users_guide.pdf).
 Report bugs and/or suggestions to paradox1859@gmail.com
 
 ## TODO's
+ [ ] Add board identifier (for the proper time scale)
+ [ ] Add register's operations
+ [ ] Add configure options for VME and 742 series digitizers
