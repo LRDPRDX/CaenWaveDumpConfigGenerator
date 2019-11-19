@@ -214,7 +214,8 @@ class CommonSettingsPage( BackSavePage ) :
 
         self.externalOption = SOptionMenu( self.triggerFrame.contentFrame, self.style,
                                            self.controller.conf.common.pd["EXTERNAL_TRIGGER"],
-                                          *self.controller.conf.common.extTriggers )
+                                          *self.controller.conf.common.extTriggers,
+                                          command=self.ManageTrigger )
         self.externalOption.config( width=24 )
         self.externalOption.grid( row=0, column=3, padx=( 0, 30 ), sticky="ew" )
 
@@ -304,6 +305,22 @@ class CommonSettingsPage( BackSavePage ) :
         self.recordFrame.AlignColumns()
 
 
+    def ManageTrigger( self, value ):
+        if( value != "DISABLED" ):
+            if( value == "ACQUISITION_ONLY" ):
+                #channel trigger can be either trigger out only or disabled
+                for ch in self.controller.conf.channel:
+                    if( ch.pd["CHANNEL_TRIGGER"].get() != "TRGOUT_ONLY" ):
+                        ch.pd["CHANNEL_TRIGGER"].set( "DISABLED" )
+            else:
+                #channel trigger can be only disabled
+                for ch in self.controller.conf.channel:
+                    ch.pd["CHANNEL_TRIGGER"].set( "DISABLED" )
+        else:
+            #nothing to do if external trigger disabled
+            pass
+
+
 
 class ChannelFrame( GroupFrame ):
     def __init__( self, parent, controller, style, i ):
@@ -334,7 +351,8 @@ class ChannelFrame( GroupFrame ):
 
             self.channelTrigOption = SOptionMenu( self.triggerFrame.contentFrame, self.style,
                                                   self.controller.conf.channel[self.i].pd["CHANNEL_TRIGGER"],
-                                                 *self.controller.conf.channel[self.i].triggers )
+                                                 *self.controller.conf.channel[self.i].triggers,
+                                                 command=self.ManageTrigger )
             self.channelTrigOption.config( width=24 )
             self.channelTrigOption.grid( row=0, column=1, padx=(0, 10), sticky="ew" )
 
@@ -384,6 +402,38 @@ class ChannelFrame( GroupFrame ):
         else:
             self.baseScale.config( state="normal", showvalue=True )
             self.offsetScale.config( state="disabled", showvalue=False )
+
+
+    def ManageTrigger( self, value ):
+        if( value != "DISABLED" ):
+            if( value == "TRGOUT_ONLY" ):
+                #in this case external trigger can be acquisition only
+                if( self.controller.conf.common.pd["EXTERNAL_TRIGGER"].get() != "ACQUISITION_ONLY" ):
+                    self.controller.conf.common.pd["EXTERNAL_TRIGGER"].set( "DISABLED" )
+
+                for (i,ch) in enumerate(self.controller.conf.channel):
+                    if i != self.i:
+                        #other channel can be either only acquisition or disabled
+                        if( ch.pd["CHANNEL_TRIGGER"].get() != "ACQUISITION_ONLY" ):
+                            ch.pd["CHANNEL_TRIGGER"].set( "DISABLED" )
+            else:
+                #in this case external trigger can be only disabled
+                self.controller.conf.common.pd[ "EXTERNAL_TRIGGER"].set( "DISABLED" )
+
+                if( value == "ACQUISITION_ONLY" ):
+                    #other channel can be either trigger or disabled
+                    for (i,ch) in enumerate(self.controller.conf.channel):
+                        if i != self.i:
+                            if( ch.pd["CHANNEL_TRIGGER"].get() != "TRGOUT_ONLY" ):
+                                ch.pd["CHANNEL_TRIGGER"].set( "DISABLED" )
+                else:
+                    #other channel can be only disabled
+                    for (i,ch) in enumerate(self.controller.conf.channel):
+                        if i != self.i:
+                            ch.pd["CHANNEL_TRIGGER"].set( "DISABLED" )
+        else:
+            #nothing to do if this channel disabled
+            pass
 
 
 
