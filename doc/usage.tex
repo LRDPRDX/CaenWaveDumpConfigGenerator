@@ -1,5 +1,5 @@
 \section{Usage}
-\subsection{Creating configuration file}
+\subsection{Create configuration file}
 As it was mentioned in \textbf{Introduction} in order to configure a digitizer you must
 use configuration file for \blt{WD}. The complete instruction how to create it see in
 \blt{WD} documentation. This section is how to do this using the GUI presented in this
@@ -17,7 +17,7 @@ using is straightforward. However, some things require additional explanation.
 \subsubsection*{Pages}
 The GUI consists of four pages (including the starting page). The \codet{Common Settings}
 page contains configure options applied to each channel. The \codet{Individual Settings}
-page is for the channels' configuration. The \codet{Terminal} settings contains terminal
+page is for the channels' configuration. The \codet{Terminal} page contains terminal
 frame for running \blt{WD} (see below).
 \subsubsection*{Path to file}
 It is possible to place config-file in a directory that differs from that in which the
@@ -25,11 +25,11 @@ GUI was launched. To save config-file wherever you wish use the \codet{Save to} 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{../pictures/documentation/gui/path.png}
+    \includegraphics[width=0.4\textwidth]{../pictures/documentation/gui/browser.png}
 \end{figure}
 
 By default it is the current directory (\codet{./}) but it can be changed either by
-changing the entry directly or by using file browser: \codet{Browse} \inlinegraphics{../pictures/documentation/gui/browser.png} button.
+changing the entry directly or by using file browser: \codet{Browse} \inlinegraphics{../pictures/documentation/gui/browser_btn.png} button.
 
 \subsubsection*{Baseline and DC offset}
 \begin{figure}[H]
@@ -38,20 +38,25 @@ changing the entry directly or by using file browser: \codet{Browse} \inlinegrap
 \end{figure}
 As it is said in \blt{WD} documentation the \codet{BASELINE\tus SHIFT} and
 \codet{DC\tus OFFSET} options \emph{are intended to be used one alternatively to the other}.
-The GUI reflects this in the following way. If \codet{Use DC offset} \inlinegraphics{../pictures/documentation/gui/check.png} button is OFF then only \codet{Baseline shift} scale matters. Using
-\codet{DC offset} scale has no effect. And vice-versa --- if that button is ON only
-\codet{DC offset} scale is taken into account.
+The GUI reflects this in the following way. If \codet{Use DC offset}
+\inlinegraphics{../pictures/documentation/gui/offset.png} check button is OFF then only the
+\codet{Baseline shift} scale matters; the \codet{DC offset} scale is disabled and its value
+is not shown. And vice-versa --- if that button is ON only
+the \codet{DC offset} scale is taken into account, and the \codet{Baseline shift} scale is
+disabled.
 
 \subsubsection*{Trigger source option}
-There are two choices for trigger: \codet{External} and \codet{Channel}. It seems that
-\codet{External} trigger has higher priority for the acquisition. I.e. if you want to
-use \codet{Channel trigger} for data acquisition you should choose the corresponding option
-in the \codet{Channel trigger} option-menu:
+There are two choices for trigger: \codet{External} and \codet{Channel}.
+\codet{External} trigger can be used either for the acquisition only or for the acquisition-\&-trigger-out signal. \codet{Channel} trigger has one additional option: trigger-out-only.
+These options are not independent (for example, it is nonsense to use the \codet{Channel}
+trigger for the acquisition and the \codet{External} for the aucquisition-\&-trigger-out
+simultaneously). These options are automatically aligned in the interface (the latest changed option has the highest precedence). For example, if you changed the \codet{Channel} trigger option of some channel to the \codet{ACQUISITION\tus ONLY}:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{../pictures/documentation/gui/chan.png}
 \end{figure}
-\noindent AND disable external trigger in the \codet{External trigger} option-menu:
+\noindent then every other channel, if its option is not the \codet{TRGOUT\tus ONLY}, is disabled automatically, so
+the \codet{External} trigger:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{../pictures/documentation/gui/ext.png}
@@ -67,7 +72,7 @@ button (right lower corner). If succeeded you should see the following popup win
 \end{figure} 
 \noindent and a file called \codet{config.txt} inside the specified directory.
 
-\subsubsection{Running WaveDump inside GUI}
+\subsection{Running WaveDump inside GUI}
 After successful creation of a config-file it's time to run \blt{WD}.
 In the \codet{Terminal} page one will find a frame with running \codet{xterm} inside.
 It is intended to eliminate the need for users to use another window to run \blt{WD}.
@@ -82,4 +87,3 @@ chose another directory to save the config-file you must provide the full path t
 That is why it is recommended to run the GUI from the directory where you place a config-file.}
 
 In the same page one will find \blt{WD} cheat sheet.  
-

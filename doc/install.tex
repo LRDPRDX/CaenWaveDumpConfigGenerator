@@ -1,21 +1,18 @@
 \section{Installation}
 To use it you need the following to be installed on your system
 \begin{itemize}
-    \item \codet{Python 2.7.x}
-    \item Packages for \codet{Python 2.7.x}:
+    \item \codet{Python 2.7.x} or \codet{Python >=3.5}
+    \item Packages for \codet{Python}:
             \begin{itemize}
                 \item \codet{Tkinter}
-                \item \codet{ttk}
-                \item \codet{tkFont}
-                \item \codet{tkFileDialog}
             \end{itemize}
 \end{itemize} 
-Most probably all of the above packages are already installed provided \codet{Python 2.7}
+Most probably all of the above packages are already installed provided \codet{Python}
 is installed on your system.
 
-Provided the above dependencies are installed you are ready to use it. Change to
-\codet{gui} directory. There you will find the file named \codet{caenccf}. You may need
-to make it executable. On Ubuntu the following command does the work:
+Provided you've unpacked this package into \codet{<package\tus dir}, change to the
+\codet{<package\tus dir/src} directory. There you will find the file named \codet{caenccf}.
+You may need to make it executable. In linux the following command does the work:
 \begin{lstlisting}
 > chmod +x caenccf
 \end{lstlisting}
@@ -37,8 +34,12 @@ this you need to place the executable in your \codet{bin} directory:
 > cp caenccf /usr/bin/
 \end{lstlisting}
 Also you need to extend the \codet{PYTHONPATH} environment variable in order \codet{Python}
-to see necessary modules. On Ubuntu add the following line in your \codet{.bashrc} file:
+to see necessary modules. Add the following lines in your \codet{.profile} (or \codet{.bash\tus profile}) file:
 \begin{lstlisting}
-export PYTHONPATH=$PYTHONPATH:/path/to/<package_dir>/gui
+if [[ -n "$PYTHONPATH" ]]; then
+    PYTHONPATH=$PYTHONPATH:/path/to/<package_dir>/src
+else
+    export PYTHONPATH=/home/path/to/<package_dir>/src
+fi;
 \end{lstlisting}
-After that you should be able to run the GUI from anywhere on your system. 
+Log out and log in back. After that you should be able to run the GUI from anywhere on your system. 
