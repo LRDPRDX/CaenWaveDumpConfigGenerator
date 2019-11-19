@@ -2,7 +2,7 @@
 
 ## Introduction
 This is a graphical user interface for generation of configuration files for the CAEN
-WaveDump software. For now, it contains *ONLY* the configuration options that are
+[WaveDump](https://www.caen.it/products/caen-wavedump/) software. For now, it contains *ONLY* the configuration options that are
 available for all the CAEN digitizers (particularly because I am able to test it on the
 N6720A board only). Also it doesn't contain the register's operations yet.
 
@@ -28,6 +28,14 @@ else
     export PYTHONPATH=/path/to/<package_dir>/src
 fi;
 ```
+Now log out and login back and run:
+```
+$ caenccf
+```
+You should see the starting page:
+<p float="center">
+  <img src="/pictures/documentation/gui/start_page.png" height="250">
+</p>
 
 ## Usage
 For the usage see the documentation (Sec. **Usage**).
@@ -39,6 +47,6 @@ The documentation is available [here](/doc/users_guide.pdf).
 Report bugs and/or suggestions to paradox1859@gmail.com
 
 ## TODO's
- [ ] Add board identifier (for the proper time scale)
- [ ] Add register's operations
- [ ] Add configure options for VME and 742 series digitizers
+- [ ] Add board identifier (for the proper time scale)
+- [ ] Add register's operations
+- [ ] Add configure options for VME and 742 series digitizers
