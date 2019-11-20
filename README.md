@@ -2,8 +2,12 @@
 
 ## Introduction
 This is a graphical user interface for generation of configuration files for the CAEN
-[WaveDump](https://www.caen.it/products/caen-wavedump/) software. For now, it contains *ONLY* the configuration options that are
-available for all the CAEN digitizers (particularly because I am able to test it on the
+[WaveDump](https://www.caen.it/products/caen-wavedump/) software written in python and based on
+the Tkinter package.
+
+## Disclaimer
+For now, it contains *ONLY* the configuration options that are
+available for *ALL* CAEN digitizers (particularly because I am able to test it on the
 N6720A board only). Also it doesn't contain the register's operations yet.
 
 ## System requirements
